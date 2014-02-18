@@ -13,7 +13,9 @@ import org.opencv.core.Mat;
 import android.content.Context;
 import android.test.AndroidTestRunner;
 import android.test.InstrumentationTestRunner;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This only class is Android specific.
@@ -28,7 +30,7 @@ public class OpenCVTestRunner extends InstrumentationTestRunner {
     public static Context context;
 
     private AndroidTestRunner androidTestRunner;
-    private static String TAG = "opencv_test_java";
+    private static final Logger logger = LoggerFactory.getLogger(OpenCVTestRunner.class);
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(getContext()) {
 
@@ -67,11 +69,11 @@ public class OpenCVTestRunner extends InstrumentationTestRunner {
     }
 
     static public void Log(String message) {
-        Log.e(TAG, message);
+        logger.error(message);
     }
 
     static public void Log(Mat m) {
-        Log.e(TAG, m + "\n " + m.dump());
+        logger.error(m + "\n " + m.dump());
     }
 
     @Override

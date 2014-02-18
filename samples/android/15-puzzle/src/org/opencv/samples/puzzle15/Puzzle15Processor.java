@@ -7,8 +7,8 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.core.Point;
 
-import android.util.Log;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is a controller for puzzle game.
@@ -19,7 +19,7 @@ public class Puzzle15Processor {
     private static final int GRID_SIZE = 4;
     private static final int GRID_AREA = GRID_SIZE * GRID_SIZE;
     private static final int GRID_EMPTY_INDEX = GRID_AREA - 1;
-    private static final String TAG = "Puzzle15Processor";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final Scalar GRID_EMPTY_COLOR = new Scalar(0x33, 0x33, 0x33, 0xFF);
 
     private int[]   mIndexes;
@@ -124,7 +124,7 @@ public class Puzzle15Processor {
         int col = (int) Math.floor(x * GRID_SIZE / cols);
 
         if (row < 0 || row >= GRID_SIZE || col < 0 || col >= GRID_SIZE) {
-            Log.e(TAG, "It is not expected to get touch event outside of picture");
+            logger.error("It is not expected to get touch event outside of picture");
             return ;
         }
 

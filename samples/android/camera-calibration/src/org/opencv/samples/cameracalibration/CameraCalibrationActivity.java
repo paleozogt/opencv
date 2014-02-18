@@ -26,7 +26,6 @@ import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -36,8 +35,11 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CameraCalibrationActivity extends Activity implements CvCameraViewListener2, OnTouchListener {
-    private static final String TAG = "OCVSample::Activity";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private CameraCalibrator mCalibrator;
@@ -51,7 +53,7 @@ public class CameraCalibrationActivity extends Activity implements CvCameraViewL
             switch (status) {
             case LoaderCallbackInterface.SUCCESS:
             {
-                Log.i(TAG, "OpenCV loaded successfully");
+                logger.info("OpenCV loaded successfully");
                 mOpenCvCameraView.enableView();
                 mOpenCvCameraView.setOnTouchListener(CameraCalibrationActivity.this);
             } break;
@@ -64,12 +66,12 @@ public class CameraCalibrationActivity extends Activity implements CvCameraViewL
     };
 
     public CameraCalibrationActivity() {
-        Log.i(TAG, "Instantiated new " + this.getClass());
+        logger.info("Instantiated new " + this.getClass());
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "called onCreate");
+        logger.info("called onCreate");
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -208,7 +210,7 @@ public class CameraCalibrationActivity extends Activity implements CvCameraViewL
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Log.d(TAG, "onTouch invoked");
+        logger.debug("onTouch invoked");
 
         mCalibrator.addCorners();
         return false;

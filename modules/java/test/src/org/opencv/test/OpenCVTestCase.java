@@ -37,7 +37,7 @@ public class OpenCVTestCase extends TestCase {
     protected static final double EPS = 0.001;
     protected static final double weakEPS = 0.5;
 
-    private static final String TAG = "OpenCVTestCase";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected Mat dst;
     protected Mat truth;

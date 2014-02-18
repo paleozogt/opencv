@@ -10,16 +10,18 @@ import org.opencv.android.JavaCameraView;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Puzzle15Activity extends Activity implements CvCameraViewListener, View.OnTouchListener {
 
-    private static final String  TAG = "Sample::Puzzle15::Activity";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private Puzzle15Processor    mPuzzle15;
@@ -37,7 +39,7 @@ public class Puzzle15Activity extends Activity implements CvCameraViewListener, 
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                 {
-                    Log.i(TAG, "OpenCV loaded successfully");
+                    logger.info("OpenCV loaded successfully");
 
                     /* Now enable camera view to start receiving frames */
                     mOpenCvCameraView.setOnTouchListener(Puzzle15Activity.this);
@@ -56,7 +58,7 @@ public class Puzzle15Activity extends Activity implements CvCameraViewListener, 
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        Log.d(TAG, "Creating and seting view");
+        logger.debug("Creating and seting view");
         mOpenCvCameraView = (CameraBridgeViewBase) new JavaCameraView(this, -1);
         setContentView(mOpenCvCameraView);
         mOpenCvCameraView.setCvCameraViewListener(this);
@@ -87,7 +89,7 @@ public class Puzzle15Activity extends Activity implements CvCameraViewListener, 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(TAG, "called onCreateOptionsMenu");
+        logger.info("called onCreateOptionsMenu");
         mItemHideNumbers = menu.add("Show/hide tile numbers");
         mItemStartNewGame = menu.add("Start new game");
         return true;
@@ -95,7 +97,7 @@ public class Puzzle15Activity extends Activity implements CvCameraViewListener, 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "Menu Item selected " + item);
+        logger.info("Menu Item selected " + item);
         if (item == mItemStartNewGame) {
             /* We need to start new game */
             mPuzzle15.prepareNewGame();

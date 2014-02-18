@@ -14,10 +14,11 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 
-import android.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CameraCalibrator {
-    private static final String TAG = "OCVSample::CameraCalibrator";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Size mPatternSize = new Size(4, 11);
     private final int mCornersSize = (int)(mPatternSize.width * mPatternSize.height);
@@ -43,7 +44,7 @@ public class CameraCalibrator {
         Mat.eye(3, 3, CvType.CV_64FC1).copyTo(mCameraMatrix);
         mCameraMatrix.put(0, 0, 1.0);
         Mat.zeros(5, 1, CvType.CV_64FC1).copyTo(mDistortionCoefficients);
-        Log.i(TAG, "Instantiated new " + this.getClass());
+        logger.info("Instantiated new " + this.getClass());
     }
 
     public void processFrame(Mat grayFrame, Mat rgbaFrame) {
@@ -69,9 +70,9 @@ public class CameraCalibrator {
                 && Core.checkRange(mDistortionCoefficients);
 
         mRms = computeReprojectionErrors(objectPoints, rvecs, tvecs, reprojectionErrors);
-        Log.i(TAG, String.format("Average re-projection error: %f", mRms));
-        Log.i(TAG, "Camera matrix: " + mCameraMatrix.dump());
-        Log.i(TAG, "Distortion coefficients: " + mDistortionCoefficients.dump());
+        logger.info(String.format("Average re-projection error: %f", mRms));
+        logger.info("Camera matrix: " + mCameraMatrix.dump());
+        logger.info("Distortion coefficients: " + mDistortionCoefficients.dump());
     }
 
     public void clearCorners() {

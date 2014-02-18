@@ -16,13 +16,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Tutorial4Activity extends Activity implements CvCameraViewListener2 {
-    private static final String    TAG = "OCVSample::Activity";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final int       VIEW_MODE_RGBA     = 0;
     private static final int       VIEW_MODE_GRAY     = 1;
@@ -47,12 +49,12 @@ public class Tutorial4Activity extends Activity implements CvCameraViewListener2
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                 {
-                    Log.i(TAG, "OpenCV loaded successfully");
+                    logger.info("OpenCV loaded successfully");
 
                     // Check CUDA support
                     if (Gpu.getCudaEnabledDeviceCount() <= 0)
                     {
-                        Log.e(TAG, "No CUDA capable device found!");
+                        logger.error("No CUDA capable device found!");
                         AlertDialog InitFailedDialog = new AlertDialog.Builder(Tutorial4Activity.this).create();
                         InitFailedDialog.setTitle("OpenCV CUDA error");
                         InitFailedDialog.setMessage("CUDA compatible device was not found!");
@@ -68,7 +70,7 @@ public class Tutorial4Activity extends Activity implements CvCameraViewListener2
                     else
                     {
                         // Load native library after(!) OpenCV initialization
-                        Log.i(TAG, "Found CUDA capable device!");
+                        logger.info("Found CUDA capable device!");
                         System.loadLibrary("cuda_sample");
                         mOpenCvCameraView.enableView();
                     }
@@ -82,13 +84,13 @@ public class Tutorial4Activity extends Activity implements CvCameraViewListener2
     };
 
     public Tutorial4Activity() {
-        Log.i(TAG, "Instantiated new " + this.getClass());
+        logger.info("Instantiated new " + this.getClass());
     }
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "called onCreate");
+        logger.info("called onCreate");
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -100,7 +102,7 @@ public class Tutorial4Activity extends Activity implements CvCameraViewListener2
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(TAG, "called onCreateOptionsMenu");
+        logger.info("called onCreateOptionsMenu");
         mItemPreviewRGBA = menu.add("Preview RGBA");
         mItemPreviewGray = menu.add("Preview GRAY");
         mItemPreviewCanny = menu.add("Canny");
@@ -170,7 +172,7 @@ public class Tutorial4Activity extends Activity implements CvCameraViewListener2
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);
+        logger.info("called onOptionsItemSelected; selected item: " + item);
 
         if (item == mItemPreviewRGBA) {
             mViewMode = VIEW_MODE_RGBA;

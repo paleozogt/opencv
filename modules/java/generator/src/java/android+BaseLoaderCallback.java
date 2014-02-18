@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Basic implementation of LoaderCallbackInterface.
@@ -28,7 +30,7 @@ public abstract class BaseLoaderCallback implements LoaderCallbackInterface {
             /** OpenCV loader can not start Google Play Market. **/
             case LoaderCallbackInterface.MARKET_ERROR:
             {
-                Log.e(TAG, "Package installation failed!");
+                logger.error("Package installation failed!");
                 AlertDialog MarketErrorMessage = new AlertDialog.Builder(mAppContext).create();
                 MarketErrorMessage.setTitle("OpenCV Manager");
                 MarketErrorMessage.setMessage("Package installation failed!");
@@ -43,13 +45,13 @@ public abstract class BaseLoaderCallback implements LoaderCallbackInterface {
             /** Package installation has been canceled. **/
             case LoaderCallbackInterface.INSTALL_CANCELED:
             {
-                Log.d(TAG, "OpenCV library instalation was canceled by user");
+                logger.debug("OpenCV library instalation was canceled by user");
                 finish();
             } break;
             /** Application is incompatible with this version of OpenCV Manager. Possibly, a service update is required. **/
             case LoaderCallbackInterface.INCOMPATIBLE_MANAGER_VERSION:
             {
-                Log.d(TAG, "OpenCV Manager Service is uncompatible with this app!");
+                logger.debug("OpenCV Manager Service is uncompatible with this app!");
                 AlertDialog IncomatibilityMessage = new AlertDialog.Builder(mAppContext).create();
                 IncomatibilityMessage.setTitle("OpenCV Manager");
                 IncomatibilityMessage.setMessage("OpenCV Manager service is incompatible with this app. Try to update it via Google Play.");
@@ -64,7 +66,7 @@ public abstract class BaseLoaderCallback implements LoaderCallbackInterface {
             /** Other status, i.e. INIT_FAILED. **/
             default:
             {
-                Log.e(TAG, "OpenCV loading failed!");
+                logger.error("OpenCV loading failed!");
                 AlertDialog InitFailedDialog = new AlertDialog.Builder(mAppContext).create();
                 InitFailedDialog.setTitle("OpenCV error");
                 InitFailedDialog.setMessage("OpenCV was not initialised correctly. Application will be shut down");
@@ -137,5 +139,5 @@ public abstract class BaseLoaderCallback implements LoaderCallbackInterface {
     }
 
     protected Context mAppContext;
-    private final static String TAG = "OpenCVLoader/BaseLoaderCallback";
+    private static final Logger logger = LoggerFactory.getLogger(BaseLoaderCallback.class);
 }

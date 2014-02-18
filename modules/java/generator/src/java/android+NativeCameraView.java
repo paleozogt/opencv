@@ -7,8 +7,10 @@ import org.opencv.highgui.VideoCapture;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is an implementation of a bridge between SurfaceView and native OpenCV camera.
@@ -17,7 +19,7 @@ import android.view.ViewGroup.LayoutParams;
  */
 public class NativeCameraView extends CameraBridgeViewBase {
 
-    public static final String TAG = "NativeCameraView";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private boolean mStopThread;
     private Thread mThread;
 
@@ -120,7 +122,7 @@ public class NativeCameraView extends CameraBridgeViewBase {
             mCamera.set(Highgui.CV_CAP_PROP_FRAME_HEIGHT, frameSize.height);
         }
 
-        Log.i(TAG, "Selected camera frame size = (" + mFrameWidth + ", " + mFrameHeight + ")");
+        logger.info("Selected camera frame size = (" + mFrameWidth + ", " + mFrameHeight + ")");
 
         return true;
     }
@@ -163,7 +165,7 @@ public class NativeCameraView extends CameraBridgeViewBase {
         public void run() {
             do {
                 if (!mCamera.grab()) {
-                    Log.e(TAG, "Camera frame grab failed");
+                    logger.error("Camera frame grab failed");
                     break;
                 }
 

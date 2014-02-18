@@ -10,7 +10,7 @@ public class OpenCVTestRunner {
     public static String CHESS_PATH = "";
     public static String LBPCASCADE_FRONTALFACE_PATH = "";
 
-    private static String TAG = "opencv_test_java";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     public static String getTempFileName(String extension)

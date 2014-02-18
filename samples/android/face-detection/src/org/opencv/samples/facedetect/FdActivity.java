@@ -22,14 +22,16 @@ import org.opencv.objdetect.CascadeClassifier;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FdActivity extends Activity implements CvCameraViewListener2 {
 
-    private static final String    TAG                 = "OCVSample::Activity";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final Scalar    FACE_RECT_COLOR     = new Scalar(0, 255, 0, 255);
     public static final int        JAVA_DETECTOR       = 0;
     public static final int        NATIVE_DETECTOR     = 1;
@@ -60,7 +62,7 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                 {
-                    Log.i(TAG, "OpenCV loaded successfully");
+                    logger.info("OpenCV loaded successfully");
 
                     // Load native library after(!) OpenCV initialization
                     System.loadLibrary("detection_based_tracker");
@@ -82,10 +84,10 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
 
                         mJavaDetector = new CascadeClassifier(mCascadeFile.getAbsolutePath());
                         if (mJavaDetector.empty()) {
-                            Log.e(TAG, "Failed to load cascade classifier");
+                            logger.error("Failed to load cascade classifier");
                             mJavaDetector = null;
                         } else
-                            Log.i(TAG, "Loaded cascade classifier from " + mCascadeFile.getAbsolutePath());
+                            logger.info("Loaded cascade classifier from " + mCascadeFile.getAbsolutePath());
 
                         mNativeDetector = new DetectionBasedTracker(mCascadeFile.getAbsolutePath(), 0);
 
@@ -93,7 +95,7 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
 
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Log.e(TAG, "Failed to load cascade. Exception thrown: " + e);
+                        logger.error("Failed to load cascade. Exception thrown: " + e);
                     }
 
                     mOpenCvCameraView.enableView();
@@ -111,13 +113,13 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
         mDetectorName[JAVA_DETECTOR] = "Java";
         mDetectorName[NATIVE_DETECTOR] = "Native (tracking)";
 
-        Log.i(TAG, "Instantiated new " + this.getClass());
+        logger.info("Instantiated new " + this.getClass());
     }
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "called onCreate");
+        logger.info("called onCreate");
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -182,7 +184,7 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
                 mNativeDetector.detect(mGray, faces);
         }
         else {
-            Log.e(TAG, "Detection method is not selected!");
+            logger.error("Detection method is not selected!");
         }
 
         Rect[] facesArray = faces.toArray();
@@ -194,7 +196,7 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(TAG, "called onCreateOptionsMenu");
+        logger.info("called onCreateOptionsMenu");
         mItemFace50 = menu.add("Face size 50%");
         mItemFace40 = menu.add("Face size 40%");
         mItemFace30 = menu.add("Face size 30%");
@@ -205,7 +207,7 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);
+        logger.info("called onOptionsItemSelected; selected item: " + item);
         if (item == mItemFace50)
             setMinFaceSize(0.5f);
         else if (item == mItemFace40)
@@ -232,10 +234,10 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             mDetectorType = type;
 
             if (type == NATIVE_DETECTOR) {
-                Log.i(TAG, "Detection Based Tracker enabled");
+                logger.info("Detection Based Tracker enabled");
                 mNativeDetector.start();
             } else {
-                Log.i(TAG, "Cascade detector enabled");
+                logger.info("Cascade detector enabled");
                 mNativeDetector.stop();
             }
         }

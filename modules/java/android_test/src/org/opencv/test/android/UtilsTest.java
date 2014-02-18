@@ -13,9 +13,12 @@ import org.opencv.test.OpenCVTestRunner;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UtilsTest extends OpenCVTestCase {
+    private static final Logger logger = LoggerFactory.getLogger(UtilsTest.class);
 
     public void testBitmapToMat() {
         BitmapFactory.Options opt16 = new BitmapFactory.Options();
@@ -35,7 +38,7 @@ public class UtilsTest extends OpenCVTestCase {
         assertTrue(m16.rows() == m32.rows() && m16.cols() == m32.cols() && m16.type() == m32.type());
 
         double maxDiff = Core.norm(m16, m32, Core.NORM_INF);
-        Log.d("Bmp->Mat", "bmp16->Mat vs bmp32->Mat diff = " + maxDiff);
+        logger.debug("bmp16->Mat vs bmp32->Mat diff = " + maxDiff);
 
         assertTrue(maxDiff <= 8 /* 8 == 2^8 / 2^5 */);
     }
@@ -79,13 +82,13 @@ public class UtilsTest extends OpenCVTestCase {
         bmp16.eraseColor(Color.BLACK); m16.setTo(s0);
         Utils.matToBitmap(imgRGBA, bmp16); Utils.bitmapToMat(bmp16, m16);
         maxDiff = Core.norm(imgRGBA, m16, Core.NORM_INF);
-        Log.d("RGBA->bmp16->RGBA", "maxDiff = " + maxDiff);
+        logger.debug("maxDiff = " + maxDiff);
         assertTrue(maxDiff <= 8 /* 8 == 2^8 / 2^5 */);
 
         bmp32.eraseColor(Color.WHITE); m32.setTo(s255);
         Utils.matToBitmap(imgRGBA, bmp32); Utils.bitmapToMat(bmp32, m32);
         maxDiff = Core.norm(imgRGBA, m32, Core.NORM_INF);
-        Log.d("RGBA->bmp32->RGBA", "maxDiff = " + maxDiff);
+        logger.debug("maxDiff = " + maxDiff);
         assertTrue(maxDiff == 0);
 
 
@@ -97,13 +100,13 @@ public class UtilsTest extends OpenCVTestCase {
         bmp16.eraseColor(Color.BLACK); m16.setTo(s0);
         Utils.matToBitmap(imgRGB, bmp16); Utils.bitmapToMat(bmp16, m16);
         maxDiff = Core.norm(imgRGBA, m16, Core.NORM_INF);
-        Log.d("RGB->bmp16->RGBA", "maxDiff = " + maxDiff);
+        logger.debug("maxDiff = " + maxDiff);
         assertTrue(maxDiff <= 8 /* 8 == 2^8 / 2^5 */);
 
         bmp32.eraseColor(Color.WHITE); m32.setTo(s255);
         Utils.matToBitmap(imgRGB, bmp32); Utils.bitmapToMat(bmp32, m32);
         maxDiff = Core.norm(imgRGBA, m32, Core.NORM_INF);
-        Log.d("RGB->bmp32->RGBA", "maxDiff = " + maxDiff);
+        logger.debug("maxDiff = " + maxDiff);
         assertTrue(maxDiff == 0);
 
 
@@ -117,7 +120,7 @@ public class UtilsTest extends OpenCVTestCase {
         Utils.matToBitmap(imgGray, bmp16); Utils.bitmapToMat(bmp16, m16);
         Core.extractChannel(m16, tmp, 0);
         maxDiff = Core.norm(imgGray, tmp, Core.NORM_INF);
-        Log.d("Gray->bmp16->RGBA", "maxDiff = " + maxDiff);
+        logger.debug("maxDiff = " + maxDiff);
         assertTrue(maxDiff <= 8 /* 8 == 2^8 / 2^5 */);
 
         bmp32.eraseColor(Color.WHITE); m32.setTo(s255);
@@ -125,7 +128,7 @@ public class UtilsTest extends OpenCVTestCase {
         tmp.setTo(s0);
         Core.extractChannel(m32, tmp, 0);
         maxDiff = Core.norm(imgGray, tmp, Core.NORM_INF);
-        Log.d("Gray->bmp32->RGBA", "maxDiff = " + maxDiff);
+        logger.debug("maxDiff = " + maxDiff);
         assertTrue(maxDiff == 0);
 
     }

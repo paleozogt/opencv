@@ -19,15 +19,17 @@ import org.opencv.imgproc.Imgproc;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ColorBlobDetectionActivity extends Activity implements OnTouchListener, CvCameraViewListener2 {
-    private static final String  TAG              = "OCVSample::Activity";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private boolean              mIsColorSelected = false;
     private Mat                  mRgba;
@@ -46,7 +48,7 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                 {
-                    Log.i(TAG, "OpenCV loaded successfully");
+                    logger.info("OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
                     mOpenCvCameraView.setOnTouchListener(ColorBlobDetectionActivity.this);
                 } break;
@@ -59,13 +61,13 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
     };
 
     public ColorBlobDetectionActivity() {
-        Log.i(TAG, "Instantiated new " + this.getClass());
+        logger.info("Instantiated new " + this.getClass());
     }
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "called onCreate");
+        logger.info("called onCreate");
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -121,7 +123,7 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
         int x = (int)event.getX() - xOffset;
         int y = (int)event.getY() - yOffset;
 
-        Log.i(TAG, "Touch image coordinates: (" + x + ", " + y + ")");
+        logger.info("Touch image coordinates: (" + x + ", " + y + ")");
 
         if ((x < 0) || (y < 0) || (x > cols) || (y > rows)) return false;
 
@@ -146,7 +148,7 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
 
         mBlobColorRgba = converScalarHsv2Rgba(mBlobColorHsv);
 
-        Log.i(TAG, "Touched rgba color: (" + mBlobColorRgba.val[0] + ", " + mBlobColorRgba.val[1] +
+        logger.info("Touched rgba color: (" + mBlobColorRgba.val[0] + ", " + mBlobColorRgba.val[1] +
                 ", " + mBlobColorRgba.val[2] + ", " + mBlobColorRgba.val[3] + ")");
 
         mDetector.setHsvColor(mBlobColorHsv);
@@ -167,7 +169,7 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
         if (mIsColorSelected) {
             mDetector.process(mRgba);
             List<MatOfPoint> contours = mDetector.getContours();
-            Log.e(TAG, "Contours count: " + contours.size());
+            logger.error("Contours count: " + contours.size());
             Imgproc.drawContours(mRgba, contours, -1, CONTOUR_COLOR);
 
             Mat colorLabel = mRgba.submat(4, 68, 4, 68);

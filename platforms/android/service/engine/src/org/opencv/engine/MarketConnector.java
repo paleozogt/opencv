@@ -12,12 +12,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MarketConnector
 {
     protected static final String OpenCVPackageNamePreffix = "org.opencv.lib";
-    private static final String TAG = "OpenCVEngine/MarketConnector";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     protected Context mContext;
 
     public MarketConnector(Context context)
@@ -101,7 +103,7 @@ public class MarketConnector
         try {
             OpenCVPackages.add(mContext.getPackageManager().getPackageInfo("org.opencv.engine", PackageManager.GET_CONFIGURATIONS));
         } catch (NameNotFoundException e) {
-            Log.e(TAG, "OpenCV Manager package info was not found!");
+            logger.error("OpenCV Manager package info was not found!");
             e.printStackTrace();
         }
 

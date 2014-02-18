@@ -20,13 +20,15 @@ import org.opencv.imgproc.Imgproc;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ImageManipulationsActivity extends Activity implements CvCameraViewListener2 {
-    private static final String  TAG                 = "OCVSample::Activity";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static final int      VIEW_MODE_RGBA      = 0;
     public static final int      VIEW_MODE_HIST      = 1;
@@ -71,7 +73,7 @@ public class ImageManipulationsActivity extends Activity implements CvCameraView
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                 {
-                    Log.i(TAG, "OpenCV loaded successfully");
+                    logger.info("OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
                 } break;
                 default:
@@ -83,13 +85,13 @@ public class ImageManipulationsActivity extends Activity implements CvCameraView
     };
 
     public ImageManipulationsActivity() {
-        Log.i(TAG, "Instantiated new " + this.getClass());
+        logger.info("Instantiated new " + this.getClass());
     }
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "called onCreate");
+        logger.info("called onCreate");
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -122,7 +124,7 @@ public class ImageManipulationsActivity extends Activity implements CvCameraView
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(TAG, "called onCreateOptionsMenu");
+        logger.info("called onCreateOptionsMenu");
         mItemPreviewRGBA  = menu.add("Preview RGBA");
         mItemPreviewHist  = menu.add("Histograms");
         mItemPreviewCanny = menu.add("Canny");
@@ -136,7 +138,7 @@ public class ImageManipulationsActivity extends Activity implements CvCameraView
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);
+        logger.info("called onOptionsItemSelected; selected item: " + item);
         if (item == mItemPreviewRGBA)
             viewMode = VIEW_MODE_RGBA;
         if (item == mItemPreviewHist)

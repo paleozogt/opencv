@@ -17,7 +17,6 @@ import android.app.Activity;
 import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -28,8 +27,11 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Tutorial3Activity extends Activity implements CvCameraViewListener2, OnTouchListener {
-    private static final String TAG = "OCVSample::Activity";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private Tutorial3View mOpenCvCameraView;
     private List<Size> mResolutionList;
@@ -44,7 +46,7 @@ public class Tutorial3Activity extends Activity implements CvCameraViewListener2
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                 {
-                    Log.i(TAG, "OpenCV loaded successfully");
+                    logger.info("OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
                     mOpenCvCameraView.setOnTouchListener(Tutorial3Activity.this);
                 } break;
@@ -57,13 +59,13 @@ public class Tutorial3Activity extends Activity implements CvCameraViewListener2
     };
 
     public Tutorial3Activity() {
-        Log.i(TAG, "Instantiated new " + this.getClass());
+        logger.info("Instantiated new " + this.getClass());
     }
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "called onCreate");
+        logger.info("called onCreate");
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -112,7 +114,7 @@ public class Tutorial3Activity extends Activity implements CvCameraViewListener2
         List<String> effects = mOpenCvCameraView.getEffectList();
 
         if (effects == null) {
-            Log.e(TAG, "Color effects are not supported by device!");
+            logger.error("Color effects are not supported by device!");
             return true;
         }
 
@@ -144,7 +146,7 @@ public class Tutorial3Activity extends Activity implements CvCameraViewListener2
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);
+        logger.info("called onOptionsItemSelected; selected item: " + item);
         if (item.getGroupId() == 1)
         {
             mOpenCvCameraView.setEffect((String) item.getTitle());
@@ -166,7 +168,7 @@ public class Tutorial3Activity extends Activity implements CvCameraViewListener2
     @SuppressLint("SimpleDateFormat")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Log.i(TAG,"onTouch event");
+        logger.info("onTouch event");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         String currentDateandTime = sdf.format(new Date());
         String fileName = Environment.getExternalStorageDirectory().getPath() +

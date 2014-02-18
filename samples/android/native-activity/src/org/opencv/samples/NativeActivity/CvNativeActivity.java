@@ -6,10 +6,12 @@ import org.opencv.android.OpenCVLoader;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CvNativeActivity extends Activity {
-    private static final String TAG = "OCVSample::Activity";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -17,7 +19,7 @@ public class CvNativeActivity extends Activity {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                 {
-                    Log.i(TAG, "OpenCV loaded successfully");
+                    logger.info("OpenCV loaded successfully");
                     System.loadLibrary("native_activity");
                     Intent intent = new Intent(CvNativeActivity.this, android.app.NativeActivity.class);
                     CvNativeActivity.this.startActivity(intent);
@@ -31,7 +33,7 @@ public class CvNativeActivity extends Activity {
     };
 
     public CvNativeActivity() {
-        Log.i(TAG, "Instantiated new " + this.getClass());
+        logger.info("Instantiated new " + this.getClass());
     }
 
    @Override

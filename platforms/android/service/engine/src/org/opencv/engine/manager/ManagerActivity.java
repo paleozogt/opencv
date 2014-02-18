@@ -25,7 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -36,6 +36,9 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ManagerActivity extends Activity
 {
     /** Called when the activity is first created. */
@@ -44,7 +47,7 @@ public class ManagerActivity extends Activity
         super.onCreate(savedInstanceState);
 
         if (!HardwareDetector.mIsReady) {
-            Log.e(TAG, "Cannot initialize native part of OpenCV Manager!");
+            logger.error("Cannot initialize native part of OpenCV Manager!");
 
             AlertDialog dialog = new AlertDialog.Builder(this).create();
 
@@ -249,10 +252,10 @@ public class ManagerActivity extends Activity
     protected void onResume() {
         super.onResume();
         if (HardwareDetector.mIsReady) {
-            Log.d(TAG, "Filling package list on resume");
+            logger.debug("Filling package list on resume");
             OpenCVEngineServiceConnection connection = new OpenCVEngineServiceConnection();
             if (!bindService(new Intent("org.opencv.engine.BIND"), connection, Context.BIND_AUTO_CREATE)) {
-                Log.e(TAG, "Cannot bind to OpenCV Manager service!");
+                logger.error("Cannot bind to OpenCV Manager service!");
                 TextView EngineVersionView = (TextView)findViewById(R.id.EngineVersionValue);
                 if (EngineVersionView != null)
                     EngineVersionView.setText("not avaliable");
@@ -266,7 +269,7 @@ public class ManagerActivity extends Activity
     protected Button mUpdateEngineButton;
     protected PackageInfo[] mInstalledPackageInfo;
     protected final ArrayList<HashMap<String,String>> mListViewItems = new ArrayList<HashMap<String,String>>();
-    protected static final String TAG = "OpenCV_Manager/Activity";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     protected MarketConnector mMarket;
     protected AlertDialog mActionDialog;
     protected HashMap<String,String> mActivePackageMap = new HashMap<String, String>();
@@ -283,7 +286,7 @@ public class ManagerActivity extends Activity
         public void onServiceConnected(ComponentName name, IBinder service) {
             OpenCVEngineInterface EngineService = OpenCVEngineInterface.Stub.asInterface(service);
             if (EngineService == null) {
-                Log.e(TAG, "Cannot connect to OpenCV Manager Service!");
+                logger.error("Cannot connect to OpenCV Manager Service!");
                 unbindService(this);
                 return;
             }
@@ -299,17 +302,17 @@ public class ManagerActivity extends Activity
 
             try {
                 String path = EngineService.getLibPathByVersion("2.4");
-                Log.d(TAG, "2.4 -> " + path);
+                logger.debug("2.4 -> " + path);
                 mActivePackageMap.put("24", path);
                 path = EngineService.getLibPathByVersion("2.5");
-                Log.d(TAG, "2.5 -> " + path);
+                logger.debug("2.5 -> " + path);
                 mActivePackageMap.put("25", path);
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
-            Log.d(TAG, "Filling package list on service connection");
+            logger.debug("Filling package list on service connection");
             FillPackageList();
 
             unbindService(this);
@@ -365,7 +368,7 @@ public class ManagerActivity extends Activity
                 }
 
                 int idx = 0;
-                Log.d(TAG, PackageName);
+                logger.debug(PackageName);
                 StringTokenizer tokenizer = new StringTokenizer(PackageName, "_");
                 while (tokenizer.hasMoreTokens())
                 {
@@ -389,7 +392,7 @@ public class ManagerActivity extends Activity
                 String ActivePackagePath;
                 String Tags = null;
                 ActivePackagePath = mActivePackageMap.get(OpenCVersion);
-                Log.d(TAG, OpenCVersion + " -> " + ActivePackagePath);
+                logger.debug(OpenCVersion + " -> " + ActivePackagePath);
 
                 if (null != ActivePackagePath)
                 {

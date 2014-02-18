@@ -7,10 +7,12 @@ import org.opencv.core.Core;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FpsMeter {
-    private static final String TAG               = "FpsMeter";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final int    STEP              = 20;
     private static final DecimalFormat FPS_FORMAT = new DecimalFormat("0.00");
 
@@ -48,7 +50,7 @@ public class FpsMeter {
                     mStrfps = FPS_FORMAT.format(fps) + " FPS@" + Integer.valueOf(mWidth) + "x" + Integer.valueOf(mHeight);
                 else
                     mStrfps = FPS_FORMAT.format(fps) + " FPS";
-                Log.i(TAG, mStrfps);
+                logger.info(mStrfps);
             }
         }
     }
@@ -59,7 +61,7 @@ public class FpsMeter {
     }
 
     public void draw(Canvas canvas, float offsetx, float offsety) {
-        Log.d(TAG, mStrfps);
+        logger.debug(mStrfps);
         canvas.drawText(mStrfps, offsetx, offsety, mPaint);
     }
 

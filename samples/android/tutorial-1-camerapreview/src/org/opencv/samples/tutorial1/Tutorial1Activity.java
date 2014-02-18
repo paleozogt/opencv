@@ -10,15 +10,17 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Tutorial1Activity extends Activity implements CvCameraViewListener2 {
-    private static final String TAG = "OCVSample::Activity";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private boolean              mIsJavaCamera = true;
@@ -30,7 +32,7 @@ public class Tutorial1Activity extends Activity implements CvCameraViewListener2
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                 {
-                    Log.i(TAG, "OpenCV loaded successfully");
+                    logger.info("OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
                 } break;
                 default:
@@ -42,13 +44,13 @@ public class Tutorial1Activity extends Activity implements CvCameraViewListener2
     };
 
     public Tutorial1Activity() {
-        Log.i(TAG, "Instantiated new " + this.getClass());
+        logger.info("Instantiated new " + this.getClass());
     }
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "called onCreate");
+        logger.info("called onCreate");
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -87,7 +89,7 @@ public class Tutorial1Activity extends Activity implements CvCameraViewListener2
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(TAG, "called onCreateOptionsMenu");
+        logger.info("called onCreateOptionsMenu");
         mItemSwitchCamera = menu.add("Toggle Native/Java camera");
         return true;
     }
@@ -95,7 +97,7 @@ public class Tutorial1Activity extends Activity implements CvCameraViewListener2
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         String toastMesage = new String();
-        Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);
+        logger.info("called onOptionsItemSelected; selected item: " + item);
 
         if (item == mItemSwitchCamera) {
             mOpenCvCameraView.setVisibility(SurfaceView.GONE);

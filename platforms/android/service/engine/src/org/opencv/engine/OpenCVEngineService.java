@@ -4,27 +4,29 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenCVEngineService extends Service
 {
-    private static final String TAG = "OpenCVEngine/Service";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private IBinder mEngineInterface = null;
     private MarketConnector mMarket;
     private BinderConnector mNativeBinder;
 
     public void onCreate() {
-        Log.i(TAG, "Service starting");
+        logger.info("Service starting");
         super.onCreate();
-        Log.i(TAG, "Engine binder component creating");
+        logger.info("Engine binder component creating");
         mMarket = new MarketConnector(getBaseContext());
         mNativeBinder = new BinderConnector(mMarket);
         if (mNativeBinder.Init()) {
             mEngineInterface = mNativeBinder.Connect();
-            Log.i(TAG, "Service started successfully");
+            logger.info("Service started successfully");
         } else {
-            Log.e(TAG, "Cannot initialize native part of OpenCV Manager!");
-            Log.e(TAG, "Using stub instead");
+            logger.error("Cannot initialize native part of OpenCV Manager!");
+            logger.error("Using stub instead");
 
             mEngineInterface = new OpenCVEngineInterface.Stub() {
 
@@ -55,18 +57,18 @@ public class OpenCVEngineService extends Service
     }
 
     public IBinder onBind(Intent intent) {
-        Log.i(TAG, "Service onBind called for intent " + intent.toString());
+        logger.info("Service onBind called for intent " + intent.toString());
         return mEngineInterface;
     }
 
     public boolean onUnbind(Intent intent)
     {
-        Log.i(TAG, "Service onUnbind called for intent " + intent.toString());
+        logger.info("Service onUnbind called for intent " + intent.toString());
         return true;
     }
     public void OnDestroy()
     {
-        Log.i(TAG, "OpenCV Engine service destruction");
+        logger.info("OpenCV Engine service destruction");
         mNativeBinder.Disconnect();
     }
 

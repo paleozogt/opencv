@@ -5,10 +5,12 @@ import org.opencv.core.Mat;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class CalibrationResult {
-    private static final String TAG = "OCVSample::CalibrationResult";
+    private static final Logger logger = LoggerFactory.getLogger(CalibrationResult.class);
 
     private static final int CAMERA_MATRIX_ROWS = 3;
     private static final int CAMERA_MATRIX_COLS = 3;
@@ -35,14 +37,14 @@ public abstract class CalibrationResult {
         }
 
         editor.commit();
-        Log.i(TAG, "Saved camera matrix: " + cameraMatrix.dump());
-        Log.i(TAG, "Saved distortion coefficients: " + distortionCoefficients.dump());
+        logger.info("Saved camera matrix: " + cameraMatrix.dump());
+        logger.info("Saved distortion coefficients: " + distortionCoefficients.dump());
     }
 
     public static boolean tryLoad(Activity activity, Mat cameraMatrix, Mat distortionCoefficients) {
         SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
         if (sharedPref.getFloat("0", -1) == -1) {
-            Log.i(TAG, "No previous calibration results found");
+            logger.info("No previous calibration results found");
             return false;
         }
 
@@ -54,7 +56,7 @@ public abstract class CalibrationResult {
             }
         }
         cameraMatrix.put(0, 0, cameraMatrixArray);
-        Log.i(TAG, "Loaded camera matrix: " + cameraMatrix.dump());
+        logger.info("Loaded camera matrix: " + cameraMatrix.dump());
 
         double[] distortionCoefficientsArray = new double[DISTORTION_COEFFICIENTS_SIZE];
         int shift = CAMERA_MATRIX_ROWS * CAMERA_MATRIX_COLS;
@@ -62,7 +64,7 @@ public abstract class CalibrationResult {
             distortionCoefficientsArray[i - shift] = sharedPref.getFloat(i.toString(), -1);
         }
         distortionCoefficients.put(0, 0, distortionCoefficientsArray);
-        Log.i(TAG, "Loaded distortion coefficients: " + distortionCoefficients.dump());
+        logger.info("Loaded distortion coefficients: " + distortionCoefficients.dump());
 
         return true;
     }

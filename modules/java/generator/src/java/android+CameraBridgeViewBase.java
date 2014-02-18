@@ -17,9 +17,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is a basic class, implementing the interaction with Camera and OpenCV library.
@@ -30,7 +32,7 @@ import android.view.SurfaceView;
  */
 public abstract class CameraBridgeViewBase extends SurfaceView implements SurfaceHolder.Callback {
 
-    private static final String TAG = "CameraBridge";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final int MAX_UNSPECIFIED = -1;
     private static final int STOPPED = 0;
     private static final int STARTED = 1;
@@ -67,7 +69,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
         super(context, attrs);
 
         int count = attrs.getAttributeCount();
-        Log.d(TAG, "Attr count: " + Integer.valueOf(count));
+        logger.debug("Attr count: " + Integer.valueOf(count));
 
         TypedArray styledAttrs = getContext().obtainStyledAttributes(attrs, R.styleable.CameraBridgeViewBase);
         if (styledAttrs.getBoolean(R.styleable.CameraBridgeViewBase_show_fps, false))
@@ -158,7 +160,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
                     result = mOldStyleListener.onCameraFrame(inputFrame.gray());
                     break;
                 default:
-                    Log.e(TAG, "Invalid frame format! Only RGBA and Gray Scale are supported!");
+                    logger.error("Invalid frame format! Only RGBA and Gray Scale are supported!");
             };
 
             return result;
@@ -190,7 +192,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
     };
 
     public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-        Log.d(TAG, "call surfaceChanged event");
+        logger.debug("call surfaceChanged event");
         synchronized(mSyncObject) {
             if (!mSurfaceExist) {
                 mSurfaceExist = true;
@@ -394,9 +396,9 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             try {
                 Utils.matToBitmap(modified, mCacheBitmap);
             } catch(Exception e) {
-                Log.e(TAG, "Mat type: " + modified);
-                Log.e(TAG, "Bitmap type: " + mCacheBitmap.getWidth() + "*" + mCacheBitmap.getHeight());
-                Log.e(TAG, "Utils.matToBitmap() throws an exception: " + e.getMessage());
+                logger.error("Mat type: " + modified);
+                logger.error("Bitmap type: " + mCacheBitmap.getWidth() + "*" + mCacheBitmap.getHeight());
+                logger.error("Utils.matToBitmap() throws an exception: " + e.getMessage());
                 bmpValid = false;
             }
         }
@@ -405,7 +407,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             Canvas canvas = getHolder().lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
-                Log.d(TAG, "mStretch value: " + mScale);
+                logger.debug("mStretch value: " + mScale);
 
                 if (mScale != 0) {
                     canvas.drawBitmap(mCacheBitmap, new Rect(0,0,mCacheBitmap.getWidth(), mCacheBitmap.getHeight()),

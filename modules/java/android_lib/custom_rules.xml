@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="custom_rules" default="help">
+    <target name="-pre-build">
+        <mvn artifact="org.slf4j:slf4j-api:1.7.5" />
+    </target>
+
+    <target name="-pre-clean">
+        <delete>
+            <fileset dir="${basedir}" includes="**/slf4j-api*.jar" />
+        </delete>
+    </target>
+
+    <macrodef name="mvn">
+        <attribute name="plugin"         default="org.apache.maven.plugins:maven-dependency-plugin" />
+        <attribute name="plugin.version" default="2.8" />
+        <attribute name="plugin.action"  default="copy" />
+        <attribute name="repoUrl"        default="http://repo.maven.apache.org" />
+        <attribute name="destdir"        default="${basedir}/libs" />
+        <attribute name="artifact" />
+        <sequential>
+            <echo message="destdir= @{destdir}" />
+        
+            <exec executable="mvn" failonerror="true">
+                <arg value="@{plugin}:@{plugin.version}:@{plugin.action}" />
+                <arg value="-DrepoUrl=@{repoUrl}" />
+                <arg value="-Dartifact=@{artifact}" />
+                <arg value="-DoutputDirectory=@{destdir}" />
+            </exec>
+        </sequential>
+    </macrodef>
+</project>
