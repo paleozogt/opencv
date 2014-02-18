@@ -18,8 +18,6 @@
         <attribute name="destdir"        default="${basedir}/libs" />
         <attribute name="artifact" />
         <sequential>
-            <echo message="destdir= @{destdir}" />
-        
             <exec executable="mvn" failonerror="true">
                 <arg value="@{plugin}:@{plugin.version}:@{plugin.action}" />
                 <arg value="-DrepoUrl=@{repoUrl}" />
