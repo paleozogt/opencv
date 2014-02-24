@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -450,7 +451,22 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
     // NOTE: On Android 4.1.x the function must be called before SurfaceTextre constructor!
     protected void AllocateCache()
     {
-        mCacheBitmap = Bitmap.createBitmap(mFrameWidth, mFrameHeight, Bitmap.Config.ARGB_8888);
+        int orientation= getResources().getConfiguration().orientation;
+        int cacheWidth, cacheHeight;
+
+        switch (orientation) {
+        case Configuration.ORIENTATION_PORTRAIT:
+            cacheWidth= mFrameHeight;
+            cacheHeight= mFrameWidth;
+            break;
+        case Configuration.ORIENTATION_LANDSCAPE:
+        default:
+            cacheWidth= mFrameWidth;
+            cacheHeight= mFrameHeight;
+            break;
+        }
+
+        mCacheBitmap = Bitmap.createBitmap(cacheWidth, cacheHeight, Bitmap.Config.ARGB_8888);
     }
 
     public interface ListItemAccessor {
