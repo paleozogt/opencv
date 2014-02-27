@@ -103,7 +103,7 @@ inline vector<_Tp> remove_dups(const vector<_Tp>& src) {
 // Cognitive Neuroscience 3 (1991), 71–86.
 class Eigenfaces : public FaceRecognizer
 {
-private:
+protected:
     int _num_components;
     double _threshold;
     vector<Mat> _projections;
@@ -156,7 +156,7 @@ public:
 // 711–720.
 class Fisherfaces: public FaceRecognizer
 {
-private:
+protected:
     int _num_components;
     double _threshold;
     Mat _eigenvectors;
@@ -213,7 +213,7 @@ public:
 //
 class LBPH : public FaceRecognizer
 {
-private:
+protected:
     int _grid_x;
     int _grid_y;
     int _radius;
